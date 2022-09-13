@@ -14,10 +14,10 @@ class Connector:
                          f"ON CONFLICT (user_id) DO NOTHING"
         self.cursor_db.execute(sql_add_user)
 
-    def add_ad(self, ads_id, title, text_ad, user_id):
-        sql_add_ad = f"INSERT INTO ads (ads_id, title, text_ad, user_id)" \
-                        f"VALUES ('{ads_id}', '{title}', '{text_ad}', {user_id})" \
-                        f"ON CONFLICT (ads_id) DO NOTHING"
+    def add_ad(self, title, text_ad, time, user_id):
+        sql_add_ad = f"INSERT INTO ads (title, text_ad, time, user_id)" \
+                        f"VALUES ('{title}', '{text_ad}', '{time}', {user_id})" \
+                        f"ON CONFLICT (user_id) DO NOTHING"
         self.cursor_db.execute(sql_add_ad)
 
     def del_ad(self, ads_id):
@@ -25,7 +25,13 @@ class Connector:
         self.cursor_db.execute(sql_del_ad)
 
     def show_ad(self, user_id):
-        sql_show_ad = f"SELECT title, text_ad FROM pair WHERE user_id = {user_id}"
+        sql_show_ad = f"SELECT title, text_ad, time FROM ads WHERE user_id = {user_id}"
+        self.cursor_db.execute(sql_show_ad)
+        ad = self.cursor_db.fetchone()
+        return ad
+
+    def show_all(self):
+        sql_show_ad = f"SELECT * FROM ads"
         self.cursor_db.execute(sql_show_ad)
         ad = self.cursor_db.fetchone()
         return ad

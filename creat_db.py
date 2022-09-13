@@ -1,6 +1,7 @@
 import psycopg2
 import config_db
 
+
 def create_db(cursor):
     sql_create_database = f'CREATE DATABASE {config_db.DATABASE}'
     cursor.execute(sql_create_database)
@@ -20,9 +21,10 @@ def create_tables(cursor):
                        'email VARCHAR(20) NOT NULL,' \
                        'pass VARCHAR(20) NOT NULL;' \
                        'CREATE TABLE IF NOT EXISTS ads (' \
-                       'ads_id INT PRIMARY KEY)' \
+                       'ad_id INT PRIMARY KEY)' \
                        'title VARCHAR(20) NOT NULL,' \
                        'text_ad VARCHAR(500) NOT NULL,' \
+                       'time VARCHAR(12) NOT NULL.' \
                        'user_id INT,' \
                        'FOREIGN KEY (user_id) REFERENCES users (user_id));'
     cursor.execute(sql_create_table)

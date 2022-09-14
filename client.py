@@ -1,12 +1,5 @@
 from datetime import datetime
 
-
-def choose_ad(ad_id):
-    for ad in ADS:
-        if ad['ad_id'] == ad_id:
-            return [ad]
-
-
 now = datetime.now()
 
 LOGIN = 'Ivan'

@@ -24,7 +24,13 @@ class Connector:
         sql_del_ad = f"DELETE FROM ads WHERE ads_id = {ads_id}"
         self.cursor_db.execute(sql_del_ad)
 
-    def show_ad(self, user_id):
+    def show_ad_on_ad(self, ad_id):
+        sql_show_ad = f"SELECT title, text_ad, time FROM ads WHERE ad_id = {ad_id}"
+        self.cursor_db.execute(sql_show_ad)
+        ad = self.cursor_db.fetchone()
+        return ad
+
+    def show_ad_on_user(self, user_id):
         sql_show_ad = f"SELECT title, text_ad, time FROM ads WHERE user_id = {user_id}"
         self.cursor_db.execute(sql_show_ad)
         ad = self.cursor_db.fetchone()

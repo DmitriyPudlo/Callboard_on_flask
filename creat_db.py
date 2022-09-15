@@ -17,9 +17,9 @@ def check_existing_db(cursor):
 def create_tables(cursor):
     sql_create_table = 'CREATE TABLE IF NOT EXISTS users (' \
                        'user_id INT PRIMARY KEY,' \
-                       'client_id INT,' \
-                       'email VARCHAR(20) NOT NULL,' \
-                       'pass VARCHAR(20) NOT NULL;' \
+                       'login VARCHAR(20) NOT NULL,' \
+                       'email VARCHAR(20) unique,' \
+                       'password VARCHAR(20) NOT NULL;' \
                        'CREATE TABLE IF NOT EXISTS ads (' \
                        'ad_id INT PRIMARY KEY)' \
                        'title VARCHAR(20) NOT NULL,' \

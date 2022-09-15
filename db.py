@@ -8,9 +8,9 @@ class Connector:
         self.conn.autocommit = True
         self.cursor_db = self.conn.cursor()
 
-    def add_user(self, user_id):
-        sql_add_user = f"INSERT INTO users (user_id)" \
-                         f"VALUES ('{user_id}')" \
+    def add_user(self, login, email, password):
+        sql_add_user = f"INSERT INTO users (login, email, password)" \
+                         f"VALUES ('{login}', '{email}', '{password}')" \
                          f"ON CONFLICT (user_id) DO NOTHING"
         self.cursor_db.execute(sql_add_user)
 

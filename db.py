@@ -36,6 +36,12 @@ class Connector:
         ad = self.cursor_db.fetchone()
         return ad
 
+    def show_user(self, user_id):
+        sql_show_user = f"SELECT * FROM user WHERE user_id = {user_id}"
+        self.cursor_db.execute(sql_show_user)
+        user = self.cursor_db.fetchone()
+        return user
+
     def show_all(self):
         sql_show_ad = f"SELECT * FROM ads"
         self.cursor_db.execute(sql_show_ad)

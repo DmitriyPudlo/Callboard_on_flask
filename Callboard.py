@@ -22,6 +22,14 @@ def register(login, email, password):
     return
 
 
+def check_authenticated(info):
+    login = info['login']
+    password = info['password']
+    id_user = database.check_authenticated(login, password)
+    if not id_user:
+        return False
+    return True
+
 @app.route('/ads/api/ads', methods=['GET'])
 def get_ads():
     ad_id = request.args.get('ad_id')
@@ -35,26 +43,30 @@ def get_ads():
 
 @app.route('/ads/api/ads', methods=['POST'])
 def add_ad():
-    if not request.json or not ('title' or 'text_ad') in request.json:
-        abort(404)
-    id_for_ad = ADS[-1]['ad_id'] + 1
-    ad = {'ad_id': id_for_ad,
-          'title': request.json['title'],
-          'text_ad': request.json['text_ad'],
-          'time': DATE,
-          'user_id': USERS[0]}
-    ADS.append(ad)
-    return jsonify(ad), 201
-
+    if check_authenticated(request.args):
+        if not request.json or not ('title' or 'text_ad') in request.json:
+            abort(404)
+        id_for_ad = ADS[-1]['ad_id'] + 1
+        ad = {'ad_id': id_for_ad,
+              'title': request.json['title'],
+              'text_ad': request.json['text_ad'],
+              'time': DATE,
+              'user_id': USERS[0]}
+        ADS.append(ad)
+        return jsonify(ad), 201
+    return abort(404)
 
 @app.route('/ads/api/ads', methods=['DELETE'])
 def delete_ad():
-    user_id = request.args.get('user_id')
-    if not user_id:
+    user_id_from_ad = request.args.get('user_id')
+    if not user_id_from_ad:
         abort(404)
-    ad_index = choose_id_ad(user_id)
-    del ADS[ad_index]
-    return jsonify({'result': True})
+    user_id_from_params = check_authenticated(request.args)
+    if user_id_from_params == user_id_from_ad:
+        ad_index = choose_id_ad(user_id_from_ad)
+        del ADS[ad_index]
+        return jsonify({'result': True})
+    return abort(404)
 
 
 @app.errorhandler(404)
@@ -90,13 +102,16 @@ if __name__ == '__main__':
 # #
 # @app.route('/ads/api/ads', methods=['POST'])
 # def add_ad():
-#     if not request.json or not ('title' or 'text_ad') in request.json:
-#         abort(404)
-#     title = request.json['title']
-#     text_ad = request.json['text_ad']
-#     database.add_ad(title, text_ad, DATE, user_id) # юзер_айди получим из куков
-#     ad = database.show_ad_on_user(user_id)
-#     return jsonify(ad), 201
+#     user_id = check_authenticated(request.args)
+#     if user_id:
+#         if not request.json or not ('title' or 'text_ad') in request.json:
+#             abort(404)
+#         title = request.json['title']
+#         text_ad = request.json['text_ad']
+#         database.add_ad(title, text_ad, DATE, user_id)
+#         ad = database.show_ad_on_user(user_id)
+#         return jsonify(ad), 201
+#     return abort(404)
 #
 #
 # @app.route('/ads/api/ads', methods=['DELETE'])
@@ -105,11 +120,14 @@ if __name__ == '__main__':
 #     if not ad_id:
 #         abort(404)
 #     ad_id = int(ad_id)
-#     ad = database.show_ad_on_ad(ad_id) #проверить - привязанли к этому юзеру это объявление
-#     database.del_ad(ad_id)
-#     return jsonify({'result': True})
+#     user_id_from_params = check_authenticated(request.args)
+#     ad = database.show_ad_on_ad(ad_id)
+#     if user_id_from_params == ad['user_id']:
+#         database.del_ad(ad_id)
+#         return jsonify({'result': True})
+#     return abort(404)
 #
-#
+
 # @app.route('/ads/api/ads', methods=['DELETE'])
 # def delete_ad():
 #     user_id = request.args.get('user_id')

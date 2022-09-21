@@ -25,7 +25,7 @@ class Connector:
         self.cursor_db.execute(sql_del_ad)
 
     def show_ad_on_ad(self, ad_id):
-        sql_show_ad = f"SELECT title, text_ad, time FROM ads WHERE ad_id = {ad_id}"
+        sql_show_ad = f"SELECT title, text_ad, time, user_id FROM ads WHERE ad_id = {ad_id}"
         self.cursor_db.execute(sql_show_ad)
         ad = self.cursor_db.fetchone()
         return ad
@@ -47,3 +47,10 @@ class Connector:
         self.cursor_db.execute(sql_show_ad)
         ad = self.cursor_db.fetchone()
         return ad
+
+    def check_authenticated(self, login, password):
+        sql_check = f"SELECT user_id FROM user WHERE login = {login} and password = {password}"
+        self.cursor_db.execute(sql_check)
+        user_id = self.cursor_db.fetchone()
+        return user_id
+

@@ -1,4 +1,4 @@
-class UserLogin():
+class UserLogin:
     def fromDB(self, user_id, db):
         self.__user = db.show_user(user_id)
 

@@ -17,6 +17,8 @@ def choose_id_ad(user_id):
             return ADS.index(ad)
 
 
+
+
 now = datetime.now()
 
 LOGIN = 'Ivan'

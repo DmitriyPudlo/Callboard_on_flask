@@ -1,3 +1,3 @@
-DATABASE = 'ads'
-USER = ''
-PASSWORD = ''
+DATABASE = 'postgres'
+USER = 'postgres'
+PASSWORD = '3616'

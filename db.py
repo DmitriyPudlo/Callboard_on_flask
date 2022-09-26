@@ -32,7 +32,7 @@ class Connector:
         sql_show_ad = f"SELECT user_id FROM ads WHERE ad_id = '{ad_id}'"
         self.cursor_db.execute(sql_show_ad)
         ad = self.cursor_db.fetchone()
-        return ad
+        return ad[0]
 
     def show_ad_on_user(self, user_id):
         sql_show_ad = f"SELECT title, text_ad, time FROM ads WHERE user_id = '{user_id}'"
@@ -56,10 +56,18 @@ class Connector:
         sql_check = f"SELECT user_id FROM users WHERE login = '{login}' and password = '{password}'"
         self.cursor_db.execute(sql_check)
         user_id = self.cursor_db.fetchone()
-        return user_id
+        return user_id[0]
 
     def check_email(self, email):
         sql_check = f"SELECT email FROM users WHERE email = '{email}'"
         self.cursor_db.execute(sql_check)
         email = self.cursor_db.fetchone()
-        return email
+        return email[0]
+
+    def update(self, ad_id, title=None, text_ad=None):
+        if title:
+            sql_update_title = f""
+            self.cursor_db.execute(sql_update_title)
+        if text_ad:
+            sql_update_text = f""
+            self.cursor_db.execute(sql_update_text)

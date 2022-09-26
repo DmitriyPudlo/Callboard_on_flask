@@ -25,7 +25,6 @@ def get_ads():
     if not ad_id:
         ads = database.show_all()
         return jsonify(ads)
-    ad_id = int(ad_id[0])
     ad = database.show_ad_on_ad(ad_id)
     if not ad:
         abort(404)
@@ -33,39 +32,42 @@ def get_ads():
 
 
 @app.route('/ads/api/ads', methods=['POST'])
-def add_ad():
-    if not request.args['login'] or not request.args['password']:
+def add_update_ad():
+    login = request.args.get('login')
+    password = request.args.get('password')
+    title = request.json.get('title')
+    text_ad = request.json.get('text_ad')
+    ad_id = request.args.get('ad_id')
+    if not login or not password:
         return abort(404)
-    login = request.args['login']
-    password = request.args['password']
     user_id = database.check_authenticated(login, password)
-    user_id = int(user_id[0])
-    if user_id:
-        if not request.json or not ('title' or 'text_ad') in request.json:
-            abort(404)
-        title = request.json['title']
-        text_ad = request.json['text_ad']
-        database.add_ad(title, text_ad, DATE, user_id)
-        ad = database.show_ad_on_user(user_id)
-        return jsonify(ad), 201
-    return abort(404)
+    if not user_id:
+        return abort(404)
+    if ad_id:
+        if database.show_ad_on_ad(ad_id):
+            database.update(ad_id, title, text_ad)
+        else:
+            return abort(404)
+    else:
+        if not title or not text_ad:
+            return abort(404)
+        else:
+            database.add_ad(title, text_ad, DATE, user_id)
+            ad = database.show_ad_on_user(user_id)
+            return jsonify(ad), 201
 
 
 @app.route('/ads/api/ads', methods=['DELETE'])
 def delete_ad():
-    print(not request.args.get('login') or not request.args.get('password'))
     if not request.args.get('login') or not request.args.get('password'):
         return abort(404)
     ad_id = request.args.get('ad_id')
-    print(not ad_id)
     if not ad_id:
         abort(404)
-    ad_id = int(ad_id[0])
     login = request.args.get('login')
     password = request.args.get('password')
     user_id_from_params = database.check_authenticated(login, password)
     user_id_from_db = database.show_user_id_on_ad(ad_id)
-    print(user_id_from_params[0] == user_id_from_db[0])
     if user_id_from_params[0] == user_id_from_db[0]:
         database.del_ad(ad_id)
         return jsonify({'result': True})

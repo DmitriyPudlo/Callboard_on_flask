@@ -66,8 +66,8 @@ class Connector:
 
     def update(self, ad_id, title=None, text_ad=None):
         if title:
-            sql_update_title = f""
+            sql_update_title = f"UPDATE title ON '{title}' FROM ads WHERE ad_id = '{ad_id}'"
             self.cursor_db.execute(sql_update_title)
         if text_ad:
-            sql_update_text = f""
+            sql_update_text = f"UPDATE text_ad ON '{text_ad}' FROM ads WHERE ad_id = '{ad_id}'"
             self.cursor_db.execute(sql_update_text)

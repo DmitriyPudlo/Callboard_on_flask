@@ -35,8 +35,8 @@ def get_ads():
 def add_update_ad():
     login = request.args.get('login')
     password = request.args.get('password')
-    title = request.json.get('title')
-    text_ad = request.json.get('text_ad')
+    title = request.args.get('title')
+    text_ad = request.args.get('text_ad')
     ad_id = request.args.get('ad_id')
     if not login or not password:
         return abort(404)
@@ -46,6 +46,8 @@ def add_update_ad():
     if ad_id:
         if database.show_ad_on_ad(ad_id):
             database.update(ad_id, title, text_ad)
+            ad = database.show_ad_on_user(user_id)
+            return jsonify(ad), 201
         else:
             return abort(404)
     else:
